@@ -1,0 +1,36 @@
+log_path: /var/log/nginx/hng-access.log
+audit_log: /app/audit.log
+
+slack:
+  webhook_url: "https://hooks.slack.com/services/YOUR/WEBHOOK/URL"
+
+detection:
+  # Sliding window duration (seconds)
+  window_seconds: 60
+  # Z-score threshold
+  zscore_threshold: 3.0
+  # Rate multiple threshold (current / mean)
+  rate_multiplier: 5.0
+  # Error surge multiplier (tightens thresholds)
+  error_surge_multiplier: 3.0
+
+baseline:
+  # Rolling window for mean/stddev computation (seconds)
+  window_seconds: 1800      # 30 minutes
+  # How often to recalculate baseline (seconds)
+  recalc_interval: 60
+  # Minimum requests/sec floor (avoids division by zero)
+  floor_mean: 0.1
+  floor_stddev: 0.05
+
+ban:
+  # Backoff schedule in seconds
+  schedule:
+    - 600       # 10 min
+    - 1800      # 30 min
+    - 7200      # 2 hours
+    - -1        # permanent
+
+dashboard:
+  port: 8080
+  refresh_seconds: 3
