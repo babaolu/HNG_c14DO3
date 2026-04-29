@@ -137,4 +137,4 @@ curl http://localhost:8080/api/metrics
 
 ## GitHub Repository
 
-[https://github.com/YOUR_ORG/hng-detector](https://github.com/YOUR_ORG/hng-detector)
+[https://github.com/babaolu/HNG_c14DO3](https://github.com/babaolu/HNG_c14DO3#)
