@@ -25,14 +25,22 @@ log = logging.getLogger("blocker")
 
 def _iptables(action: str, ip: str) -> bool:
     """
-    Run an iptables command. Returns True on success.
-    action: "-I" to insert (ban), "-D" to delete (unban).
+    Insert DROP rule AFTER UFW's chains so UFW's ACCEPT rules
+    for SSH/80/443 still fire first for all other IPs.
+    We insert into ufw-before-input at position 1 so our rule
+    is checked early but UFW still manages the chain policy.
     """
-    cmd = ["iptables", action, "INPUT", "-s", ip, "-j", "DROP"]
+    if action == "-I":
+        # Insert into ufw-before-input chain — UFW manages this chain
+        # but we can add rules to it. This keeps our rule inside UFW's
+        # framework so UFW's default ACCEPT for known ports still works.
+        cmd = ["iptables", "-I", "ufw-before-input", "1",
+               "-s", ip, "-j", "DROP"]
+    else:
+        cmd = ["iptables", "-D", "ufw-before-input",
+               "-s", ip, "-j", "DROP"]
     try:
-        result = subprocess.run(
-            cmd, capture_output=True, text=True, timeout=5
-        )
+        result = subprocess.run(cmd, capture_output=True, text=True, timeout=5)
         if result.returncode != 0:
             log.error(f"iptables {action} {ip} failed: {result.stderr.strip()}")
             return False
@@ -40,7 +48,6 @@ def _iptables(action: str, ip: str) -> bool:
     except Exception as e:
         log.error(f"iptables exception for {ip}: {e}")
         return False
-
 
 class Blocker:
     def __init__(self, cfg, state):

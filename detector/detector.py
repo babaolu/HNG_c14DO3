@@ -105,8 +105,14 @@ class AnomalyDetector:
                     f"IP ANOMALY {ip}: {condition} "
                     f"(error_surge={in_error_surge})"
                 )
-                self.blocker.ban(ip, condition, ip_rate, mean)
-
+                min_rate = self.cfg["ban"].get("min_rate_to_ban", 5.0)
+                if ip_rate >= min_rate:                          # only ban if rate is high enough
+            self.blocker.ban(ip, condition, ip_rate, mean)
+        else:
+            log.debug(
+                f"Rate {ip_rate:.2f} below min_rate_to_ban {min_rate}, "
+                f"logging anomaly but skipping ban"
+            )
         # --- Global Anomaly ---
         global_zscore = self._z_score(global_rate)
         global_rate_check = (mean > 0 and global_rate >= self.rate_multiplier * mean)

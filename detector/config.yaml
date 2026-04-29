@@ -19,9 +19,9 @@ baseline:
   window_seconds: 1800      # 30 minutes
   # How often to recalculate baseline (seconds)
   recalc_interval: 60
-  # Minimum requests/sec floor (avoids division by zero)
-  floor_mean: 0.1
-  floor_stddev: 0.05
+  # Raised floors — won't fire until traffic is meaningfully above noise
+  floor_mean: 1.0
+  floor_stddev: 0.5
 
 ban:
   # Backoff schedule in seconds
@@ -30,6 +30,11 @@ ban:
     - 1800      # 30 min
     - 7200      # 2 hours
     - -1        # permanent
+
+whitelist:
+  ips:
+    - "127.0.0.1"
+    - "::1"
 
 dashboard:
   port: 8080
