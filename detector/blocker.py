@@ -68,6 +68,9 @@ class Blocker:
 
     def ban(self, ip: str, condition: str, rate: float, baseline: float) -> None:
         """Ban an IP: iptables DROP + state update + Slack + audit log."""
+        if ip in cfg["whitelist"]["ips"]:
+            log.warning(f"Skippint ban for whitelisted IP: {ip}")
+            return
         with self._lock:
             existing = self.state["banned"].get(ip, {})
             offense = existing.get("offense_count", 0) + 1
