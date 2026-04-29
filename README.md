@@ -131,7 +131,7 @@ curl http://localhost:8080/api/metrics
 
 ## Blog Post
 
-[Link to your published blog post here]
+[https://dev.to/babaolu/-how-i-built-a-real-time-anomaly-detection-engine-for-a-cloud-storage-platform-4cb9](How I built this project)
 
 ---
 
