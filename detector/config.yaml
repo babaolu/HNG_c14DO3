@@ -20,8 +20,8 @@ baseline:
   # How often to recalculate baseline (seconds)
   recalc_interval: 60
   # Raised floors — won't fire until traffic is meaningfully above noise
-  floor_mean: 1.0
-  floor_stddev: 0.5
+  floor_mean: 0.5
+  floor_stddev: 0.1
 
 ban:
   # Backoff schedule in seconds
